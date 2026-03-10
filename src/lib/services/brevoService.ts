@@ -43,11 +43,18 @@ interface BrevoContactRequest {
 export class BrevoClient {
   private apiKey: string;
   private baseUrl = 'https://api.brevo.com/v3';
+  private senderEmail: string;
+  private senderName: string;
 
   constructor(apiKey?: string) {
     this.apiKey = apiKey || process.env.BREVO_API_KEY || '';
+    this.senderEmail = process.env.BREVO_SENDER_EMAIL || 'noreply@crm.local';
+    this.senderName = process.env.BREVO_SENDER_NAME || 'CRM SaaS';
+    
     if (!this.apiKey) {
-      console.warn('Brevo API key not configured. Emails will not be sent.');
+      console.warn('⚠️ Brevo API key not configured. Emails will not be sent.');
+    } else {
+      console.log('✅ Brevo service initialized with API key and sender:', this.senderEmail);
     }
   }
 
@@ -60,39 +67,55 @@ export class BrevoClient {
     }
 
     try {
+      const emailPayload = {
+        to: request.to,
+        subject: request.subject,
+        htmlContent: request.htmlContent || request.textContent,
+        textContent: request.textContent || '',
+        sender: request.sender || {
+          name: this.senderName,
+          email: this.senderEmail,
+        },
+        replyTo: request.replyTo,
+        templateId: request.templateId,
+        params: request.params,
+        cc: request.cc,
+        bcc: request.bcc,
+        attachment: request.attachments?.map(att => ({
+          content: att.content,
+          name: att.name,
+        })) || [],
+      };
+
+      console.log('📧 Sending email via Brevo:', {
+        to: request.to.map(r => r.email),
+        subject: request.subject,
+        sender: emailPayload.sender.email,
+      });
+
       const response = await fetch(`${this.baseUrl}/smtp/email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'api-key': this.apiKey,
         },
-        body: JSON.stringify({
-          to: request.to,
-          subject: request.subject,
-          htmlContent: request.htmlContent,
-          textContent: request.textContent,
-          sender: request.sender || {
-            name: 'CRM SaaS',
-            email: process.env.BREVO_SENDER_EMAIL || 'noreply@crm.local',
-          },
-          replyTo: request.replyTo,
-          templateId: request.templateId,
-          params: request.params,
-          cc: request.cc,
-          bcc: request.bcc,
-          attachment: request.attachments,
-        }),
+        body: JSON.stringify(emailPayload),
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(`Brevo API error: ${error.message}`);
+        console.error('❌ Brevo API error response:', {
+          status: response.status,
+          data: responseData,
+        });
+        throw new Error(`Brevo API error (${response.status}): ${responseData?.message || 'Unknown error'}`);
       }
 
-      const data = await response.json();
-      return { messageId: data.messageId };
+      console.log('✅ Email sent successfully:', responseData.messageId);
+      return { messageId: responseData.messageId };
     } catch (error) {
-      console.error('Failed to send email via Brevo:', error);
+      console.error('❌ Failed to send email via Brevo:', error);
       throw error;
     }
   }

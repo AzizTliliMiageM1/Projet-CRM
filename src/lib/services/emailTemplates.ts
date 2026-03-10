@@ -2,6 +2,8 @@
  * Email templates for CRM SaaS notifications
  */
 
+const getAppUrl = () => process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
 export const emailTemplates = {
   /**
    * New lead notification email
@@ -48,7 +50,7 @@ export const emailTemplates = {
               <div class="field-value">${status}</div>
             </div>
             
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/leads" class="button">Voir la piste →</a>
+            <a href="${getAppUrl()}/dashboard/leads" class="button">Voir la piste →</a>
           </div>
           <div class="footer">
             <p>© 2024 CRM SaaS. Tous droits réservés.</p>
@@ -98,7 +100,7 @@ export const emailTemplates = {
               <div class="field-value">${dueDate}</div>
             </div>
             
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/tasks" class="button">Voir la tâche →</a>
+            <a href="${getAppUrl()}/dashboard/tasks" class="button">Voir la tâche →</a>
           </div>
           <div class="footer">
             <p>© 2024 CRM SaaS. Tous droits réservés.</p>
@@ -141,7 +143,7 @@ export const emailTemplates = {
             
             <p>N'hésitez pas à nous contacter si vous avez des questions.</p>
             
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/contacts" class="button">Accéder au CRM →</a>
+            <a href="${getAppUrl()}/dashboard/contacts" class="button">Accéder au CRM →</a>
           </div>
           <div class="footer">
             <p>© 2024 CRM SaaS. Tous droits réservés.</p>
@@ -199,7 +201,7 @@ export const emailTemplates = {
             
             <p>Continuez à faire du bon travail! 🚀</p>
             
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" class="button">Voir le Tableau de Bord →</a>
+            <a href="${getAppUrl()}/dashboard" class="button">Voir le Tableau de Bord →</a>
           </div>
           <div class="footer">
             <p>© 2024 CRM SaaS. Tous droits réservés.</p>
