@@ -1,0 +1,9 @@
+{
+  "typescript.tsserver.excludeDirectories": ["**/node_modules"],
+  "typescript.tsserver.watchOptions": {
+    "watchFile": "useFsEvents",
+    "watchDirectory": "useFsEvents",
+    "fallbackPolling": "dynamicPriority",
+    "excludeDirectories": ["**/node_modules", "**/.git"]
+  }
+}

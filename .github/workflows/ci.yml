@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master", "develop", "feature/**"]
+  pull_request:
+    branches: ["main", "master", "develop", "feature/**"]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set dummy environment variables for build
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=anon-key" >> $GITHUB_ENV
+          echo "BREVO_API_KEY=dummy" >> $GITHUB_ENV
+          echo "BREVO_SENDER_EMAIL=dummy@example.com" >> $GITHUB_ENV
+          echo "BREVO_SENDER_NAME=CRM SaaS" >> $GITHUB_ENV
+
+      - name: Run preflight checks
+        run: npm run preflight
