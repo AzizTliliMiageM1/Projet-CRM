@@ -64,78 +64,118 @@ export function TaskTable({ tasks, onEdit, onDelete, isLoading }: TaskTableProps
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-slate-800">
-            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300">Statut</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300">Titre</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300">Échéance</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300">Description</th>
-            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-300">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((task) => (
-            <tr
-              key={task.id}
-              className={`border-b border-slate-800 hover:bg-slate-800/50 ${task.completed ? "opacity-60" : ""}`}
-            >
-              <td className="px-6 py-3 text-sm text-slate-100">
-                {task.completed ? (
-                  <span className="inline-block rounded px-2 py-1 text-xs font-semibold bg-green-600 text-white">
-                    ✓ Complétée
+    <>
+      <div className="overflow-hidden rounded-2xl border border-slate-800/50 bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950 backdrop-blur-sm shadow-2xl">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-max">
+            <thead>
+              <tr className="relative border-b border-slate-800/50 bg-gradient-to-r from-slate-800/40 to-slate-900/20">
+                <th className="px-6 py-5 text-left">
+                  <span className="text-xs font-semibold text-slate-300 uppercase tracking-widest opacity-70">
+                    Statut
                   </span>
-                ) : (
-                  <span className="inline-block rounded px-2 py-1 text-xs font-semibold bg-orange-600 text-white">
-                    En cours
+                </th>
+                <th className="px-6 py-5 text-left">
+                  <span className="text-xs font-semibold text-slate-300 uppercase tracking-widest opacity-70">
+                    Titre
                   </span>
-                )}
-              </td>
-              <td className="px-6 py-3 text-sm text-slate-100">{task.title}</td>
-              <td className="px-6 py-3 text-sm text-slate-400">
-                {task.due_date ? new Date(task.due_date).toLocaleDateString("fr-FR") : "—"}
-              </td>
-              <td className="px-6 py-3 text-sm text-slate-400">{task.description || "—"}</td>
-              <td className="px-6 py-3 text-right">
-                <div className="flex items-center justify-end gap-2">
-                  <button
-                    onClick={() => onEdit(task)}
-                    className="rounded-md bg-sky-600 px-3 py-1 text-xs font-semibold text-white hover:bg-sky-500"
-                  >
-                    Modifier
-                  </button>
+                </th>
+                <th className="px-6 py-5 text-left">
+                  <span className="text-xs font-semibold text-slate-300 uppercase tracking-widest opacity-70">
+                    Échéance
+                  </span>
+                </th>
+                <th className="px-6 py-5 text-left">
+                  <span className="text-xs font-semibold text-slate-300 uppercase tracking-widest opacity-70">
+                    Description
+                  </span>
+                </th>
+                <th className="px-6 py-5 text-right">
+                  <span className="text-xs font-semibold text-slate-300 uppercase tracking-widest opacity-70">
+                    Actions
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/30">
+              {tasks.map((task, index) => (
+                <tr
+                  key={task.id}
+                  className={`group transition-all duration-300 hover:bg-slate-800/30 ${
+                    index % 2 === 0 ? "bg-slate-900/5" : "bg-slate-900/20"
+                  } ${task.completed ? "opacity-70" : ""}`}
+                >
+                  <td className="px-6 py-5 text-sm">
+                    {task.completed ? (
+                      <span className="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold backdrop-blur-sm bg-green-600/30 border border-green-500/50 text-green-200">
+                        ✓ Complétée
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold backdrop-blur-sm bg-orange-600/30 border border-orange-500/50 text-orange-200">
+                        En cours
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-6 py-5 text-sm">
+                    <p className="font-semibold text-slate-100 group-hover:text-sky-300 transition-colors duration-300 truncate">
+                      {task.title}
+                    </p>
+                  </td>
+                  <td className="px-6 py-5 text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
+                    {task.due_date ? new Date(task.due_date).toLocaleDateString("fr-FR") : "—"}
+                  </td>
+                  <td className="px-6 py-5 text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-300 max-w-xs truncate">
+                    {task.description || "—"}
+                  </td>
+                  <td className="px-6 py-5 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => onEdit(task)}
+                        className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-sky-500/20 hover:shadow-sky-500/40 transition-all duration-300 hover:scale-105 active:scale-95"
+                      >
+                        Modifier
+                      </button>
 
-                  {deletingId === task.id ? (
-                    <div className="flex gap-1">
-                      <button
-                        onClick={() => handleConfirmDelete(task.id)}
-                        disabled={confirmed === task.id}
-                        className="rounded-md bg-red-600 px-2 py-1 text-xs font-semibold text-white hover:bg-red-500 disabled:opacity-60"
-                      >
-                        {confirmed === task.id ? "..." : "Oui"}
-                      </button>
-                      <button
-                        onClick={handleCancel}
-                        className="rounded-md border border-slate-600 px-2 py-1 text-xs font-semibold text-slate-200 hover:bg-slate-800"
-                      >
-                        Non
-                      </button>
+                      {deletingId === task.id ? (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleConfirmDelete(task.id)}
+                            disabled={confirmed === task.id}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-red-500/20 hover:shadow-red-500/40 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                          >
+                            {confirmed === task.id ? "..." : "Confirmer"}
+                          </button>
+                          <button
+                            onClick={handleCancel}
+                            className="rounded-lg border border-slate-700/50 hover:border-slate-600 hover:bg-slate-800/50 px-3 py-2 text-xs font-semibold text-slate-300 hover:text-slate-100 transition-all duration-300"
+                          >
+                            Annuler
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleDeleteClick(task.id)}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-red-600/20 hover:bg-red-600/40 border border-red-500/20 hover:border-red-500/40 px-3 py-2 text-xs font-semibold text-red-400 hover:text-red-300 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/10"
+                        >
+                          Supprimer
+                        </button>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      onClick={() => handleDeleteClick(task.id)}
-                      className="rounded-md bg-red-600/20 px-3 py-1 text-xs font-semibold text-red-400 hover:bg-red-600/30"
-                    >
-                      Supprimer
-                    </button>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="relative mt-4 rounded-xl border border-slate-800/30 bg-gradient-to-r from-slate-900/40 to-slate-950/40 backdrop-blur-sm px-6 py-4">
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-sky-500/5 via-transparent to-blue-500/5 pointer-events-none"></div>
+        <p className="relative text-xs font-medium text-slate-400">
+          <span className="text-sky-400 font-semibold">{tasks.length}</span> tâche{tasks.length > 1 ? "s" : ""} au total
+        </p>
+      </div>
+    </>
   );
 }
