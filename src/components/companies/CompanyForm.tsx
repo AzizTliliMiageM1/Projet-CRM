@@ -78,7 +78,7 @@ export function CompanyForm({ onSuccess, initialData }: CompanyFormProps) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Acme Corp"
-        icon={Building2}
+        icon={<Building2 className="w-5 h-5" />}
         error={error ? "Erreur" : undefined}
       />
 
@@ -88,7 +88,7 @@ export function CompanyForm({ onSuccess, initialData }: CompanyFormProps) {
         value={domain}
         onChange={(e) => setDomain(e.target.value)}
         placeholder="example.com"
-        icon={Globe}
+        icon={<Globe className="w-5 h-5" />}
       />
 
       {error && (

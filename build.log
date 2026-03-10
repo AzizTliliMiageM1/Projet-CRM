@@ -1,0 +1,25 @@
+
+> crm-saas@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./src/app/(auth)/login/page.tsx:139:7
+Parsing ecmascript source code failed
+[0m [90m 137 |[39m         [33m<[39m[33mp[39m[33m>[39m[33mChargement[39m[33m...[39m[33m<[39m[33m/[39m[33mp[39m[33m>[39m
+ [90m 138 |[39m       [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 139 |[39m     [33m<[39m[33m/[39m[33mSuspense[39m[33m>[39m}[33m>[39m
+ [90m     |[39m       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 140 |[39m       [33m<[39m[33mLoginFormInner[39m [33m/[39m[33m>[39m
+ [90m 141 |[39m     [33m<[39m[33m/[39m[33mSuspense[39m[33m>[39m
+ [90m 142 |[39m   )[33m;[39m[0m
+
+Expected corresponding JSX closing tag for <div>
+
+
+    at <unknown> (./src/app/(auth)/login/page.tsx:139:7)

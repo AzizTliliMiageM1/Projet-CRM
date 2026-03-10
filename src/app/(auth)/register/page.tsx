@@ -77,7 +77,7 @@ export default function RegisterPage() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Jean Dupont"
-              icon={User}
+              icon={<User className="w-5 h-5" />}
             />
 
             <Input
@@ -87,7 +87,7 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="votre@email.com"
-              icon={Mail}
+              icon={<Mail className="w-5 h-5" />}
             />
 
             <Input
@@ -97,7 +97,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              icon={Lock}
+              icon={<Lock className="w-5 h-5" />}
             />
 
             {/* Error Message */}

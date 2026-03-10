@@ -74,7 +74,7 @@ function LoginFormInner() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="votre@email.com"
-              icon={Mail}
+              icon={<Mail className="w-5 h-5" />}
             />
 
             <Input
@@ -84,7 +84,7 @@ function LoginFormInner() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              icon={Lock}
+              icon={<Lock className="w-5 h-5" />}
             />
 
             {/* Error Message */}
@@ -131,12 +131,14 @@ function LoginFormInner() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 to-slate-900 text-slate-200">
-      <div className="flex flex-col items-center gap-3">
-        <Loader className="w-8 h-8 animate-spin text-sky-400" />
-        <p>Chargement...</p>
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 to-slate-900 text-slate-200">
+        <div className="flex flex-col items-center gap-3">
+          <Loader className="w-8 h-8 animate-spin text-sky-400" />
+          <p>Chargement...</p>
+        </div>
       </div>
-    </Suspense>}>
+    }>
       <LoginFormInner />
     </Suspense>
   );
