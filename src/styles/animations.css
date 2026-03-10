@@ -1,0 +1,322 @@
+/* ===== ANIMATIONS FLUIDES ===== */
+
+/* Animation glow subtile pour éléments actifs */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(15, 23, 42, 0.3), 
+                0 0 40px rgba(56, 189, 248, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(15, 23, 42, 0.5), 
+                0 0 60px rgba(56, 189, 248, 0.2);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Shine effect pour cartes au hover */
+@keyframes shine {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shine {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shine 3s infinite;
+}
+
+/* Scale animation pour hover */
+@keyframes subtle-scale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.hover\:subtle-scale:hover {
+  animation: subtle-scale 0.3s ease-out;
+}
+
+/* Fade in animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.5s ease-out;
+}
+
+/* Slide from left */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slide-in-left 0.4s ease-out;
+}
+
+/* Bounce animation pour icônes */
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.bounce-subtle {
+  animation: bounce-subtle 0.6s ease-in-out infinite;
+}
+
+/* Rotate animation pour loading */
+@keyframes spin-smooth {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-smooth {
+  animation: spin-smooth 2s linear infinite;
+}
+
+/* Gradient shift animation */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Smooth transitions pour tous les interactive elements */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Backdrop blur enhancement */
+.backdrop-blur-xl {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.1);
+}
+
+/* Text gradient animation */
+.text-gradient-animated {
+  background: linear-gradient(
+    -45deg,
+    #56ccf2,
+    #2f80ed,
+    #56ccf2,
+    #2f80ed
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* Scrollbar styling */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(100, 116, 139, 0.1);
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.8);
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Use GPU acceleration */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== RESPONSIVE ANIMATIONS ===== */
+
+@media (max-width: 640px) {
+  /* Lighter animations on mobile */
+  .glow-pulse {
+    animation: glow-pulse 5s ease-in-out infinite;
+  }
+
+  .shine {
+    animation: shine 5s infinite;
+  }
+}
+
+/* ===== BUTTON ANIMATIONS ===== */
+
+.btn-animate {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-animate::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-animate:hover::after {
+  left: 100%;
+}
+
+/* ===== COLOR GLOW SHADOWS ===== */
+
+.glow-sky {
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+
+.glow-green {
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+.glow-red {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+.glow-orange {
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.2);
+}
+
+/* ===== FORM ANIMATIONS ===== */
+
+input:focus,
+textarea:focus,
+select:focus {
+  animation: input-focus 0.3s ease-out;
+}
+
+@keyframes input-focus {
+  0% {
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  }
+}
+
+/* ===== CARD ANIMATIONS ===== */
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.3);
+}
+
+/* ===== TABLE ROW ANIMATIONS ===== */
+
+tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+  animation: table-row-highlight 0.2s ease-out;
+}
+
+@keyframes table-row-highlight {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: rgba(51, 65, 85, 0.3);
+  }
+}
