@@ -3,6 +3,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { LeadTable } from "@/components/leads/LeadTable";
 import { LeadForm } from "@/components/leads/LeadForm";
+import { Container, PageHeader } from "@/components/Layout";
+import { Card } from "@/components/Card";
+import { Button } from "@/components/Button";
+import { TrendingUp, Plus, X } from "lucide-react";
 
 interface Lead {
   id: string;
@@ -62,45 +66,40 @@ export default function LeadsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-50">Leads</h1>
-        <p className="text-sm text-slate-400">
-          Gérez vos opportunités commerciales.
-        </p>
-      </div>
+    <Container>
+      <PageHeader
+        icon={<TrendingUp className="w-8 h-8" />}
+        title="Leads & Opportunités"
+        description="Gérez vos opportunités commerciales et suivez votre pipeline"
+        action={
+          <Button
+            variant="primary"
+            onClick={() => {
+              setEditingLead(null);
+              setShowForm(!showForm);
+            }}
+            icon={showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+          >
+            {showForm ? "Fermer" : "Ajouter un lead"}
+          </Button>
+        }
+      />
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-3 animate-fade-in">
         {showForm && (
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 md:col-span-1">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-50">
-                {editingLead ? "Modifier" : "Nouveau lead"}
-              </h2>
-              <button
-                onClick={handleCloseForm}
-                className="text-slate-400 hover:text-slate-200"
-              >
-                ✕
-              </button>
+          <Card className="lg:col-span-1 animate-fade-in-up" variant="elevated">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-700/30">
+                <h3 className="text-lg font-semibold text-slate-50">
+                  {editingLead ? "Modifier le lead" : "Nouveau lead"}
+                </h3>
+              </div>
+              <LeadForm initialData={editingLead ?? undefined} onSuccess={handleFormSuccess} />
             </div>
-            <LeadForm initialData={editingLead ?? undefined} onSuccess={handleFormSuccess} />
-          </div>
+          </Card>
         )}
 
-        <div className={showForm ? "md:col-span-2" : "md:col-span-3"}>
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-50">Liste des leads</h2>
-            <button
-              onClick={() => {
-                setEditingLead(null);
-                setShowForm(!showForm);
-              }}
-              className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500"
-            >
-              + Ajouter un lead
-            </button>
-          </div>
+        <div className={`${showForm ? "lg:col-span-2" : "lg:col-span-3"} animate-fade-in-up`} style={{ animationDelay: "0.1s" }}>
           <LeadTable
             leads={leads}
             onEdit={handleEdit}
@@ -109,6 +108,6 @@ export default function LeadsPage() {
           />
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

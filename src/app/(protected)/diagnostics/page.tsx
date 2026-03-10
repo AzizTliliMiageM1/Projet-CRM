@@ -1,7 +1,10 @@
 import { getRouteUserContext } from "@/lib/auth/route-guards";
 import { isAdmin } from "@/lib/auth/roles";
 import { redirect } from "next/navigation";
+import { Container, PageHeader } from "@/components/Layout";
+import { Card } from "@/components/Card";
 import { DiagnosticsClient } from "./DiagnosticsClient";
+import { Activity } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -20,80 +23,94 @@ export default async function DiagnosticsPage() {
     .limit(10);
 
   return (
-    <div className="space-y-8">
-      <section className="rounded-md border border-slate-800 bg-slate-900/60 p-4">
-        <h1 className="mb-2 text-lg font-semibold">Diagnostics admin</h1>
-        <p className="text-sm text-slate-400">
-          Page réservée aux administrateurs pour vérifier rapidement l état du CRM.
-        </p>
-      </section>
+    <Container>
+      <PageHeader
+        icon={<Activity className="w-8 h-8" />}
+        title="Diagnostics admin"
+        description="Page réservée aux administrateurs pour vérifier rapidement l'état du CRM et les logs système."
+      />
 
-      <section className="rounded-md border border-slate-800 bg-slate-900/60 p-4 text-sm">
-        <h2 className="mb-2 font-semibold">Contexte utilisateur courant</h2>
-        <dl className="grid grid-cols-1 gap-2 md:grid-cols-3">
-          <div>
-            <dt className="text-slate-400">User ID</dt>
-            <dd className="font-mono text-xs break-all">{user.userId}</dd>
-          </div>
-          <div>
-            <dt className="text-slate-400">Rôle</dt>
-            <dd className="capitalize">{user.role}</dd>
-          </div>
-          <div>
-            <dt className="text-slate-400">Organization ID</dt>
-            <dd className="font-mono text-xs break-all">{user.organizationId}</dd>
-          </div>
-        </dl>
-      </section>
+      <div className="space-y-6 animate-fade-in">
+        {/* User Context Card */}
+        <Card variant="elevated" className="animate-fade-in-up">
+          <h2 className="mb-4 font-semibold text-lg flex items-center gap-2">
+            <div className="w-1 h-1 rounded-full bg-sky-400"></div>
+            Contexte utilisateur courant
+          </h2>
+          <dl className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
+              <dt className="text-sm text-slate-400 mb-1">User ID</dt>
+              <dd className="font-mono text-xs break-all text-sky-300">{user.userId}</dd>
+            </div>
+            <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
+              <dt className="text-sm text-slate-400 mb-1">Rôle</dt>
+              <dd className="capitalize text-sky-300 font-medium">{user.role}</dd>
+            </div>
+            <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
+              <dt className="text-sm text-slate-400 mb-1">Organization ID</dt>
+              <dd className="font-mono text-xs break-all text-sky-300">{user.organizationId}</dd>
+            </div>
+          </dl>
+        </Card>
 
-      <section className="rounded-md border border-slate-800 bg-slate-900/60 p-4 text-sm">
-        <h2 className="mb-3 font-semibold">Smoke tests API</h2>
-        <DiagnosticsClient />
-      </section>
+        {/* Smoke Tests Card */}
+        <Card variant="elevated" className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+          <h2 className="mb-4 font-semibold text-lg flex items-center gap-2">
+            <div className="w-1 h-1 rounded-full bg-green-400"></div>
+            Smoke tests API
+          </h2>
+          <DiagnosticsClient />
+        </Card>
 
-      <section className="rounded-md border border-slate-800 bg-slate-900/60 p-4 text-sm">
-        <h2 className="mb-3 font-semibold">Derniers email_logs</h2>
-        {emailLogs && emailLogs.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-slate-800 text-left">
-                  <th className="px-2 py-1">Sent at</th>
-                  <th className="px-2 py-1">Lead ID</th>
-                  <th className="px-2 py-1">Status</th>
-                  <th className="px-2 py-1">Error</th>
-                </tr>
-              </thead>
-              <tbody>
-                {emailLogs.map((log) => (
-                  <tr key={log.id} className="border-b border-slate-800/60">
-                    <td className="px-2 py-1 text-slate-300">
-                      {log.sent_at ? new Date(log.sent_at as string).toLocaleString() : ""}
-                    </td>
-                    <td className="px-2 py-1 font-mono break-all">{log.lead_id ?? "-"}</td>
-                    <td className="px-2 py-1">
-                      <span
-                        className={
-                          log.status === "sent"
-                            ? "rounded bg-emerald-500/20 px-2 py-0.5 text-emerald-300"
-                            : "rounded bg-red-500/20 px-2 py-0.5 text-red-300"
-                        }
-                      >
-                        {log.status}
-                      </span>
-                    </td>
-                    <td className="px-2 py-1 text-slate-300">
-                      {log.error_message ?? ""}
-                    </td>
+        {/* Email Logs Card */}
+        <Card variant="elevated" className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+          <h2 className="mb-4 font-semibold text-lg flex items-center gap-2">
+            <div className="w-1 h-1 rounded-full bg-purple-400"></div>
+            Derniers email_logs ({emailLogs?.length ?? 0})
+          </h2>
+          {emailLogs && emailLogs.length > 0 ? (
+            <div className="overflow-x-auto rounded-lg border border-slate-700/50">
+              <table className="min-w-full text-sm">
+                <thead className="bg-slate-800/50 border-b border-slate-700/50">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-200">Sent at</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-200">Lead ID</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-200">Status</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-200">Error</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="text-slate-400">Aucun email logué pour cette organisation.</p>
-        )}
-      </section>
-    </div>
+                </thead>
+                <tbody className="divide-y divide-slate-700/30">
+                  {emailLogs.map((log) => (
+                    <tr key={log.id} className="hover:bg-slate-800/30 transition-colors">
+                      <td className="px-4 py-3 text-slate-300">
+                        {log.sent_at ? new Date(log.sent_at as string).toLocaleString() : ""}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-xs break-all text-sky-300">{log.lead_id ?? "-"}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={
+                            log.status === "sent"
+                              ? "inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-medium text-emerald-300 border border-emerald-500/30"
+                              : "inline-flex items-center gap-1 rounded-full bg-red-500/20 px-3 py-1 text-xs font-medium text-red-300 border border-red-500/30"
+                          }
+                        >
+                          <div className={`w-1.5 h-1.5 rounded-full ${log.status === "sent" ? "bg-emerald-400" : "bg-red-400"}`}></div>
+                          {log.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-slate-400 text-xs">{log.error_message ?? "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="rounded-lg bg-slate-800/40 border border-slate-700/50 p-6 text-center">
+              <p className="text-slate-400">Aucun email logué pour cette organisation.</p>
+            </div>
+          )}
+        </Card>
+      </div>
+    </Container>
   );
 }
