@@ -8,6 +8,10 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   hoverable?: boolean;
   variant?: "default" | "elevated" | "outlined";
   className?: string;
+  /** Afficher radial gradient */
+  enableRadialGradient?: boolean;
+  /** Afficher parallax 3D au hover */
+  enableParallax?: boolean;
 }
 
 export function Card({
@@ -19,6 +23,8 @@ export function Card({
   variant = "default",
   children,
   className = "",
+  enableRadialGradient = true,
+  enableParallax = true,
   ...props
 }: CardProps) {
   const variantStyles = {
@@ -34,13 +40,38 @@ export function Card({
         transition-all duration-300 ease-out
         ${variantStyles[variant]}
         ${hoverable ? "hover:shadow-2xl hover:shadow-sky-500/10 hover:-translate-y-1 cursor-pointer" : ""}
+        ${enableParallax ? "group" : ""}
+        relative overflow-hidden
         ${className}
       `}
+      style={{
+        willChange: enableParallax ? "transform" : "auto",
+        transform: enableParallax ? "perspective(1000px)" : "none",
+      }}
       {...props}
     >
+      {/* Radial gradient overlay - premium depth */}
+      {enableRadialGradient && (
+        <div
+          className={`
+            absolute inset-0 rounded-2xl opacity-0
+            group-hover:opacity-100 transition-opacity duration-300 pointer-events-none
+            ${hoverable ? "group-hover:opacity-40" : ""}
+          `}
+          style={{
+            background: "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.2) 0%, transparent 70%)",
+          }}
+        />
+      )}
+
       {/* Glow overlay on hover */}
       {hoverable && (
         <div className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+      )}
+
+      {/* Animated border on hover */}
+      {hoverable && enableRadialGradient && (
+        <div className="absolute inset-0 rounded-2xl border border-transparent bg-gradient-to-r from-sky-400/0 via-sky-400/20 to-sky-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
       )}
 
       {header && <div className="border-b border-slate-800/50">{header}</div>}

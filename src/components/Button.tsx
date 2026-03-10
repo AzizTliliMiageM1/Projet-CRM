@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 type ButtonVariant = "primary" | "secondary" | "danger" | "success" | "outline" | "ghost";
 type ButtonSize = "xs" | "sm" | "md" | "lg";
@@ -9,6 +9,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: React.ReactNode;
   isLoading?: boolean;
   fullWidth?: boolean;
+  /** Afficher ripple effect au clic */
+  enableRipple?: boolean;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
@@ -41,13 +43,35 @@ export function Button({
   className = "",
   disabled,
   children,
+  enableRipple = true,
+  onClick,
   ...props
 }: ButtonProps) {
+  const [ripples, setRipples] = useState<Array<{ x: number; y: number; id: number }>>([]);
+  const nextIdRef = React.useRef(0);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (enableRipple && !disabled && !isLoading) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const id = nextIdRef.current++;
+
+      setRipples((prev) => [...prev, { x, y, id }]);
+
+      setTimeout(() => {
+        setRipples((prev) => prev.filter((r) => r.id !== id));
+      }, 600);
+    }
+
+    onClick?.(e);
+  };
+
   return (
     <button
       className={`
         relative inline-flex items-center justify-center gap-2
-        transition-all duration-300 ease-out cubic-bezier(0.34, 1.56, 0.64, 1)
+        transition-all duration-200 ease-out
         hover:scale-105 active:scale-95
         disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100
         rounded-lg overflow-hidden group
@@ -56,18 +80,44 @@ export function Button({
         ${sizeStyles[size]}
         ${className}
       `}
+      style={{
+        willChange: "transform, box-shadow, background",
+        transform: "translateZ(0)",
+      }}
       disabled={disabled || isLoading}
+      onClick={handleClick}
       {...props}
     >
+      {/* GPU-accelerated ripple effects */}
+      {enableRipple &&
+        ripples.map((ripple) => (
+          <span
+            key={ripple.id}
+            className="absolute rounded-full bg-white/20 pointer-events-none"
+            style={{
+              left: ripple.x,
+              top: ripple.y,
+              width: 10,
+              height: 10,
+              transform: "translate(-50%, -50%)",
+              animation: "buttonRipple 600ms ease-out",
+            }}
+          />
+        ))}
+
       {/* Hover glow effect */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none"></div>
 
       {/* Content */}
       <div className="relative z-10 flex items-center justify-center gap-2">
-        {icon && !isLoading && <span className="flex-shrink-0 transition-all duration-300 group-hover:scale-110">{icon}</span>}
+        {icon && !isLoading && (
+          <span className="flex-shrink-0 transition-all duration-200 group-hover:scale-110 group-active:scale-95">
+            {icon}
+          </span>
+        )}
         {isLoading && (
           <svg
-            className="animate-spin h-4 w-4 flex-shrink-0"
+            className="animate-spinMedium h-4 w-4 flex-shrink-0"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

@@ -76,26 +76,56 @@ interface TableRowProps {
   className?: string;
   onClick?: () => void;
   isSelected?: boolean;
+  /** Afficher lift effect au hover */
+  enableLift?: boolean;
+  /** Afficher shimmer background */
+  enableShimmer?: boolean;
 }
 
-export function TableRow({ children, className = "", onClick, isSelected = false }: TableRowProps) {
+export function TableRow({
+  children,
+  className = "",
+  onClick,
+  isSelected = false,
+  enableLift = true,
+  enableShimmer = false,
+}: TableRowProps) {
   return (
-    <tr 
+    <tr
       onClick={onClick}
       className={`
         relative group border-b border-slate-800/30 
-        hover:bg-slate-800/30 
         transition-all duration-200 ease-out
         cursor-pointer
+        ${enableLift ? "hover:-translate-y-0.5 hover:shadow-md hover:shadow-sky-500/10" : "hover:bg-slate-800/30"}
         ${isSelected ? "bg-sky-500/10 border-sky-500/30" : ""}
+        ${enableShimmer ? "hover:animate-tableShimmer" : ""}
         ${className}
       `}
+      style={{
+        willChange: enableLift ? "transform, box-shadow, background-color" : "auto",
+        transform: enableLift ? "translateZ(0)" : "none",
+      }}
     >
       {/* Hover line effect */}
       <td colSpan={999} className="absolute inset-0 pointer-events-none">
         <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-sky-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </td>
-      
+
+      {/* Shimmer background overlay */}
+      {enableShimmer && (
+        <td colSpan={999} className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+              backgroundSize: "200% 100%",
+              animation: "shimmerSweep 2s infinite",
+            }}
+          />
+        </td>
+      )}
+
       {children}
     </tr>
   );
@@ -117,11 +147,23 @@ export function TableCell({ children, className = "" }: TableCellProps) {
 interface TableActionProps {
   children: React.ReactNode;
   className?: string;
+  /** Afficher reveal animation au hover du row */
+  enableReveal?: boolean;
 }
 
-export function TableActions({ children, className = "" }: TableActionProps) {
+export function TableActions({ children, className = "", enableReveal = true }: TableActionProps) {
   return (
-    <td className={`px-6 py-4 text-right relative z-10 ${className}`}>
+    <td
+      className={`
+        px-6 py-4 text-right relative z-10
+        ${enableReveal ? "group-hover:animate-fadeInRight" : ""}
+        transition-all duration-300 ease-out
+        ${className}
+      `}
+      style={{
+        animation: enableReveal ? "fadeInRight 0.3s ease-out forwards" : "none",
+      }}
+    >
       <div className="flex items-center justify-end gap-2">
         {children}
       </div>
