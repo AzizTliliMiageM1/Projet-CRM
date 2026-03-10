@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Logo } from "@/components/Logo";
 import { Mail, Lock, Loader } from "lucide-react";
+import { Input } from "@/components/FormInputs";
+import { Button } from "@/components/Button";
 
 function LoginFormInner() {
   const router = useRouter();
@@ -48,7 +50,7 @@ function LoginFormInner() {
 
       <div className="w-full max-w-md relative z-10">
         {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-8 animate-fade-in-up">
           <div className="mb-4">
             <Logo className="w-12 h-12" />
           </div>
@@ -59,51 +61,35 @@ function LoginFormInner() {
         </div>
 
         {/* Login Card */}
-        <div className="rounded-2xl bg-gradient-to-br from-slate-900/90 to-slate-900/40 backdrop-blur p-8 shadow-2xl border border-slate-700/50">
+        <div className="rounded-2xl bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950 backdrop-blur-sm p-8 shadow-2xl border border-slate-700/50 hover:border-sky-500/30 transition-colors animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
           <h2 className="mb-8 text-center text-2xl font-bold text-slate-50">
             Connexion
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email Field */}
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">
-                Adresse Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="votre@email.com"
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-600 bg-slate-800/50 text-slate-50 placeholder-slate-500 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 transition-all"
-                />
-              </div>
-            </div>
+            <Input
+              label="Adresse Email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="votre@email.com"
+              icon={Mail}
+            />
 
-            {/* Password Field */}
-            <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-2">
-                Mot de passe
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" />
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-600 bg-slate-800/50 text-slate-50 placeholder-slate-500 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 transition-all"
-                />
-              </div>
-            </div>
+            <Input
+              label="Mot de passe"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              icon={Lock}
+            />
 
             {/* Error Message */}
             {error && (
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-start gap-2">
+              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-start gap-2 animate-fade-in">
                 <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <div className="w-2 h-2 rounded-full bg-red-400"></div>
                 </div>
@@ -112,20 +98,14 @@ function LoginFormInner() {
             )}
 
             {/* Submit Button */}
-            <button
+            <Button
               type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-lg bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              variant="primary"
+              isLoading={loading}
+              fullWidth
             >
-              {loading ? (
-                <>
-                  <Loader className="w-5 h-5 animate-spin" />
-                  Connexion en cours...
-                </>
-              ) : (
-                "Se connecter"
-              )}
-            </button>
+              Se connecter
+            </Button>
           </form>
 
           {/* Sign Up Link */}
@@ -156,7 +136,7 @@ export default function LoginPage() {
         <Loader className="w-8 h-8 animate-spin text-sky-400" />
         <p>Chargement...</p>
       </div>
-    </div>}>
+    </Suspense>}>
       <LoginFormInner />
     </Suspense>
   );
