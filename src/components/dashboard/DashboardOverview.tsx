@@ -13,6 +13,11 @@ interface Stats {
   tasks: number;
 }
 
+interface Trend {
+  value: number;
+  isPositive: boolean;
+}
+
 export function DashboardOverview() {
   const [stats, setStats] = useState<Stats>({
     companies: 0,
@@ -20,7 +25,38 @@ export function DashboardOverview() {
     leads: 0,
     tasks: 0,
   });
+  const [trends, setTrends] = useState<{ leads: Trend; tasks: Trend }>({
+    leads: { value: 0, isPositive: true },
+    tasks: { value: 0, isPositive: true },
+  });
   const [loading, setLoading] = useState(true);
+
+  // Calculer les tendances en comparant ce mois avec le mois dernier
+  const calculateMonthlyTrend = (allItems: any[]): Trend => {
+    const now = new Date();
+    const thisMonth = now.getMonth();
+    const thisYear = now.getFullYear();
+    const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+    const lastMonthYear = thisMonth === 0 ? thisYear - 1 : thisYear;
+
+    const thisMonthCount = allItems.filter((item) => {
+      if (!item.created_at) return false;
+      const date = new Date(item.created_at);
+      return date.getMonth() === thisMonth && date.getFullYear() === thisYear;
+    }).length;
+
+    const lastMonthCount = allItems.filter((item) => {
+      if (!item.created_at) return false;
+      const date = new Date(item.created_at);
+      return date.getMonth() === lastMonth && date.getFullYear() === lastMonthYear;
+    }).length;
+
+    if (lastMonthCount === 0) {
+      return { value: thisMonthCount > 0 ? 100 : 0, isPositive: thisMonthCount > 0 };
+    }
+    const percentChange = Math.round(((thisMonthCount - lastMonthCount) / lastMonthCount) * 100);
+    return { value: Math.abs(percentChange), isPositive: percentChange >= 0 };
+  };
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -30,6 +66,8 @@ export function DashboardOverview() {
         let contacts = 0;
         let leads = 0;
         let tasks = 0;
+        let leadsData: any[] = [];
+        let tasksData: any[] = [];
 
         try {
           const res = await fetch("/api/companies");
@@ -58,7 +96,8 @@ export function DashboardOverview() {
           if (res.ok) {
             const result = await res.json();
             const data = extractApiData<any[]>(result);
-            leads = Array.isArray(data) ? data.length : 0;
+            leadsData = Array.isArray(data) ? data : [];
+            leads = leadsData.length;
           }
         } catch (e) {
           console.error("Erreur leads:", e);
@@ -69,13 +108,19 @@ export function DashboardOverview() {
           if (res.ok) {
             const result = await res.json();
             const data = extractApiData<any[]>(result);
-            tasks = Array.isArray(data) ? data.length : 0;
+            tasksData = Array.isArray(data) ? data : [];
+            tasks = tasksData.length;
           }
         } catch (e) {
           console.error("Erreur tasks:", e);
         }
 
         setStats({ companies, contacts, leads, tasks });
+        
+        // Calculer les tendances avec les données récupérées
+        const leadsTrend = calculateMonthlyTrend(leadsData);
+        const tasksTrend = calculateMonthlyTrend(tasksData);
+        setTrends({ leads: leadsTrend, tasks: tasksTrend });
       } catch (err) {
         console.error("Erreur chargement statistiques:", err);
       } finally {
@@ -85,9 +130,6 @@ export function DashboardOverview() {
 
     fetchStats();
   }, []);
-
-  const leadsTrend = { value: 25, isPositive: true };
-  const tasksTrend = stats.tasks > 3 ? { value: 12, isPositive: false } : { value: 8, isPositive: true };
 
   return (
     <div className="space-y-6">
@@ -122,14 +164,14 @@ export function DashboardOverview() {
               value={stats.leads}
               icon="🎯"
               color="purple"
-              trend={leadsTrend}
+              trend={trends.leads}
             />
             <StatCard
               title="Tâches"
               value={stats.tasks}
               icon="✓"
               color="green"
-              trend={tasksTrend}
+              trend={trends.tasks}
             />
           </div>
 
