@@ -87,33 +87,43 @@ export function LeadsOverTimeChart() {
   }
 
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-6 shadow-lg">
+    <div className="rounded-2xl border border-slate-800/50 bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950 backdrop-blur-sm p-6 shadow-2xl">
       <div className="flex items-center gap-3 mb-6">
         <TrendingUp className="w-5 h-5 text-green-400" />
         <h3 className="text-lg font-semibold text-slate-50">Leads créés par mois</h3>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-          <XAxis dataKey="month" stroke="#94a3b8" />
-          <YAxis stroke="#94a3b8" />
+          <defs>
+            <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.5} />
+          <XAxis dataKey="month" stroke="#94a3b8" style={{ fontSize: "12px" }} />
+          <YAxis stroke="#94a3b8" style={{ fontSize: "12px" }} />
           <Tooltip
             contentStyle={{
               backgroundColor: "#1e293b",
               border: "1px solid #475569",
-              borderRadius: "8px",
+              borderRadius: "12px",
+              boxShadow: "0 20px 25px rgba(0, 0, 0, 0.3)",
             }}
             formatter={(value) => [`${value} leads`, "Créés"]}
+            cursor={{ stroke: "#64748b", strokeWidth: 1 }}
           />
-          <Legend />
+          <Legend wrapperStyle={{ paddingTop: "20px" }} />
           <Line
             type="monotone"
             dataKey="leads"
             stroke="#22c55e"
-            strokeWidth={2}
-            dot={{ fill: "#22c55e", r: 4 }}
-            activeDot={{ r: 6 }}
+            strokeWidth={3}
+            dot={{ fill: "#22c55e", r: 5, strokeWidth: 2, stroke: "#15803d" }}
+            activeDot={{ r: 7 }}
             name="Leads"
+            fillOpacity={1}
+            fill="url(#colorLeads)"
           />
         </LineChart>
       </ResponsiveContainer>
@@ -186,29 +196,37 @@ export function CompaniesEvolutionChart() {
   }
 
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-6 shadow-lg">
+    <div className="rounded-2xl border border-slate-800/50 bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950 backdrop-blur-sm p-6 shadow-2xl">
       <div className="flex items-center gap-3 mb-6">
         <TrendingUp className="w-5 h-5 text-blue-400" />
         <h3 className="text-lg font-semibold text-slate-50">Entreprises créées par mois</h3>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-          <XAxis dataKey="month" stroke="#94a3b8" />
-          <YAxis stroke="#94a3b8" />
+          <defs>
+            <linearGradient id="colorCompanies" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.4} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.5} />
+          <XAxis dataKey="month" stroke="#94a3b8" style={{ fontSize: "12px" }} />
+          <YAxis stroke="#94a3b8" style={{ fontSize: "12px" }} />
           <Tooltip
             contentStyle={{
               backgroundColor: "#1e293b",
               border: "1px solid #475569",
-              borderRadius: "8px",
+              borderRadius: "12px",
+              boxShadow: "0 20px 25px rgba(0, 0, 0, 0.3)",
             }}
             formatter={(value) => [`${value} entreprises`, "Créées"]}
+            cursor={{ fill: "rgba(51, 65, 85, 0.2)" }}
           />
-          <Legend />
+          <Legend wrapperStyle={{ paddingTop: "20px" }} />
           <Bar
             dataKey="companies"
-            fill="#3b82f6"
-            radius={[8, 8, 0, 0]}
+            fill="url(#colorCompanies)"
+            radius={[12, 12, 0, 0]}
             name="Entreprises"
           />
         </BarChart>
@@ -291,28 +309,37 @@ export function ActivityDistributionChart() {
   }
 
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-6 shadow-lg">
+    <div className="rounded-2xl border border-slate-800/50 bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950 backdrop-blur-sm p-6 shadow-2xl">
       <div className="flex items-center gap-3 mb-6">
         <TrendingUp className="w-5 h-5 text-purple-400" />
         <h3 className="text-lg font-semibold text-slate-50">Distribution par module</h3>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-          <XAxis dataKey="month" stroke="#94a3b8" />
-          <YAxis stroke="#94a3b8" />
+          <defs>
+            <linearGradient id="colorActivity" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#a855f7" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#a855f7" stopOpacity={0.4} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.5} />
+          <XAxis dataKey="month" stroke="#94a3b8" style={{ fontSize: "12px" }} />
+          <YAxis stroke="#94a3b8" style={{ fontSize: "12px" }} />
           <Tooltip
             contentStyle={{
               backgroundColor: "#1e293b",
               border: "1px solid #475569",
-              borderRadius: "8px",
+              borderRadius: "12px",
+              boxShadow: "0 20px 25px rgba(0, 0, 0, 0.3)",
             }}
             formatter={(value) => [`${value}`, "Total"]}
+            cursor={{ fill: "rgba(51, 65, 85, 0.2)" }}
           />
+          <Legend wrapperStyle={{ paddingTop: "20px" }} />
           <Bar
             dataKey="count"
-            fill="#a855f7"
-            radius={[8, 8, 0, 0]}
+            fill="url(#colorActivity)"
+            radius={[12, 12, 0, 0]}
             name="Nombre d'éléments"
           />
         </BarChart>
