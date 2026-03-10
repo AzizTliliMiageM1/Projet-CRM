@@ -26,12 +26,12 @@ export function Input({ label, error, icon, helperText, className = "", ...props
           className={`
             w-full rounded-lg border border-slate-700/50 bg-slate-900/30 backdrop-blur-sm
             px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500
-            transition-all duration-300
-            focus:outline-none focus:border-sky-500/50 focus:ring-2 focus:ring-sky-500/20 focus:bg-slate-900/50
-            hover:border-slate-600/50
+            transition-all duration-300 ease-out
+            focus:outline-none focus:border-sky-400/70 focus:ring-3 focus:ring-sky-500/30 focus:bg-slate-900/50 focus:shadow-lg focus:shadow-sky-500/20
+            hover:border-slate-600/70 hover:bg-slate-900/40
             disabled:opacity-50 disabled:cursor-not-allowed
             ${icon ? "pl-10" : ""}
-            ${error ? "border-red-500/50 focus:ring-red-500/20" : ""}
+            ${error ? "border-red-500/70 focus:ring-red-500/30 focus:shadow-red-500/20" : ""}
             ${className}
           `}
           {...props}
@@ -62,12 +62,12 @@ export function Textarea({ label, error, helperText, className = "", ...props }:
         className={`
           w-full rounded-lg border border-slate-700/50 bg-slate-900/30 backdrop-blur-sm
           px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500
-          transition-all duration-300
-          focus:outline-none focus:border-sky-500/50 focus:ring-2 focus:ring-sky-500/20 focus:bg-slate-900/50
-          hover:border-slate-600/50
+          transition-all duration-300 ease-out
+          focus:outline-none focus:border-sky-400/70 focus:ring-3 focus:ring-sky-500/30 focus:bg-slate-900/50 focus:shadow-lg focus:shadow-sky-500/20
+          hover:border-slate-600/70 hover:bg-slate-900/40
           disabled:opacity-50 disabled:cursor-not-allowed
           resize-none
-          ${error ? "border-red-500/50 focus:ring-red-500/20" : ""}
+          ${error ? "border-red-500/70 focus:ring-red-500/30 focus:shadow-red-500/20" : ""}
           ${className}
         `}
         {...props}
@@ -104,13 +104,13 @@ export function Select({ label, error, icon, options, className = "", ...props }
           className={`
             w-full rounded-lg border border-slate-700/50 bg-slate-900/30 backdrop-blur-sm
             px-4 py-2.5 text-sm text-slate-100
-            transition-all duration-300
-            focus:outline-none focus:border-sky-500/50 focus:ring-2 focus:ring-sky-500/20 focus:bg-slate-900/50
-            hover:border-slate-600/50
+            transition-all duration-300 ease-out
+            focus:outline-none focus:border-sky-400/70 focus:ring-3 focus:ring-sky-500/30 focus:bg-slate-900/50 focus:shadow-lg focus:shadow-sky-500/20
+            hover:border-slate-600/70 hover:bg-slate-900/40
             disabled:opacity-50 disabled:cursor-not-allowed
             appearance-none cursor-pointer
             ${icon ? "pl-10" : ""}
-            ${error ? "border-red-500/50 focus:ring-red-500/20" : ""}
+            ${error ? "border-red-500/70 focus:ring-red-500/30 focus:shadow-red-500/20" : ""}
             ${className}
           `}
           {...props}

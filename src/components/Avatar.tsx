@@ -11,20 +11,20 @@ export function getInitials(name: string): string {
 }
 
 /**
- * Génère une couleur déterministe à partir d'une string
+ * Génère un gradient déterministe à partir d'une string
  */
-export function getColorFromString(str: string): string {
-  const colors = [
-    "bg-blue-500",
-    "bg-purple-500",
-    "bg-pink-500",
-    "bg-red-500",
-    "bg-orange-500",
-    "bg-yellow-500",
-    "bg-green-500",
-    "bg-teal-500",
-    "bg-cyan-500",
-    "bg-indigo-500",
+export function getGradientFromString(str: string): string {
+  const gradients = [
+    "from-sky-400 to-blue-600",
+    "from-purple-400 to-indigo-600",
+    "from-pink-400 to-rose-600",
+    "from-red-400 to-orange-600",
+    "from-orange-400 to-amber-600",
+    "from-green-400 to-emerald-600",
+    "from-teal-400 to-cyan-600",
+    "from-blue-400 to-purple-600",
+    "from-violet-400 to-fuchsia-600",
+    "from-fuchsia-400 to-pink-600",
   ];
 
   let hash = 0;
@@ -32,28 +32,41 @@ export function getColorFromString(str: string): string {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  return colors[Math.abs(hash) % colors.length];
+  return gradients[Math.abs(hash) % gradients.length];
 }
 
 interface AvatarProps {
   name: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   className?: string;
+  showAnimation?: boolean;
 }
 
-export function Avatar({ name, size = "md", className = "" }: AvatarProps) {
+export function Avatar({ name, size = "md", className = "", showAnimation = true }: AvatarProps) {
   const initials = getInitials(name);
-  const color = getColorFromString(name);
+  const gradient = getGradientFromString(name);
 
   const sizeClass = {
     sm: "w-8 h-8 text-xs",
     md: "w-10 h-10 text-sm",
-    lg: "w-12 h-12 text-base",
+    lg: "w-12 h-12 text-lg",
+    xl: "w-16 h-16 text-xl",
   }[size];
 
   return (
     <div
-      className={`${sizeClass} ${color} rounded-full flex items-center justify-center font-semibold text-white flex-shrink-0 ${className}`}
+      className={`
+        ${sizeClass}
+        bg-gradient-to-br ${gradient}
+        rounded-full flex items-center justify-center 
+        font-semibold text-white flex-shrink-0
+        shadow-md shadow-slate-900/30
+        transition-all duration-300 ease-out
+        hover:shadow-lg hover:scale-105
+        ring-2 ring-slate-900/20
+        ${showAnimation ? "hover:ring-sky-400/50" : ""}
+        ${className}
+      `}
       title={name}
     >
       {initials}

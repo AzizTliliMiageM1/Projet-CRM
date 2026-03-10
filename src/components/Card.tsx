@@ -22,22 +22,27 @@ export function Card({
   ...props
 }: CardProps) {
   const variantStyles = {
-    default: "bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950 border border-slate-800/50",
-    elevated: "bg-slate-900/70 border border-slate-700 shadow-2xl",
-    outlined: "bg-slate-900/20 border-2 border-slate-800",
+    default: "bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-950 border border-slate-800/50 hover:border-slate-700/50",
+    elevated: "bg-gradient-to-br from-slate-900/60 via-slate-900/40 to-slate-950/60 border border-sky-500/20 shadow-lg shadow-sky-500/10 hover:shadow-xl hover:shadow-sky-500/20",
+    outlined: "bg-slate-900/20 border-2 border-slate-800 hover:border-slate-700",
   };
 
   return (
     <div
       className={`
         rounded-2xl backdrop-blur-sm
-        transition-all duration-300
+        transition-all duration-300 ease-out
         ${variantStyles[variant]}
         ${hoverable ? "hover:shadow-2xl hover:shadow-sky-500/10 hover:-translate-y-1 cursor-pointer" : ""}
         ${className}
       `}
       {...props}
     >
+      {/* Glow overlay on hover */}
+      {hoverable && (
+        <div className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+      )}
+
       {header && <div className="border-b border-slate-800/50">{header}</div>}
 
       {(title || description) && (
@@ -77,23 +82,39 @@ interface StatsCardProps {
 
 export function StatsCard({ icon, title, value, trend, description }: StatsCardProps) {
   return (
-    <Card variant="elevated" hoverable>
-      <div className="p-6">
+    <Card variant="elevated" hoverable className="relative overflow-hidden group h-full">
+      {/* Background glow animation */}
+      <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+
+      <div className="relative p-6">
         <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">{title}</p>
-            <p className="text-4xl font-bold text-slate-50 mt-2">{value}</p>
+          <div className="flex-1">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{title}</p>
+            <div className="flex items-baseline gap-2 mt-2">
+              <p className="text-4xl font-bold bg-gradient-to-r from-slate-50 to-slate-200 bg-clip-text text-transparent">
+                {value}
+              </p>
+            </div>
             {description && <p className="text-xs text-slate-500 mt-2">{description}</p>}
           </div>
-          {icon && <div className="text-4xl opacity-50">{icon}</div>}
+          {icon && (
+            <div className="text-4xl opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 transform flex-shrink-0 ml-4">
+              {icon}
+            </div>
+          )}
         </div>
 
         {trend && (
-          <div className={`flex items-center gap-2 text-sm font-semibold ${trend.isPositive ? "text-green-400" : "text-red-400"}`}>
-            <span>{trend.isPositive ? "↑" : "↓"}</span>
+          <div
+            className={`flex items-center gap-2 text-sm font-semibold ${trend.isPositive ? "text-emerald-300" : "text-red-300"}`}
+          >
+            <span className="text-lg">{trend.isPositive ? "↑" : "↓"}</span>
             <span>{Math.abs(trend.value)}% vs dernier mois</span>
           </div>
         )}
+
+        {/* Animated border on hover */}
+        <div className="absolute inset-0 rounded-2xl border border-transparent bg-gradient-to-r from-sky-400/0 via-sky-400/20 to-sky-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:animate-pulse"></div>
       </div>
     </Card>
   );
