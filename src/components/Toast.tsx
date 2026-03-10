@@ -72,7 +72,7 @@ export function Toast({ message, type = "info", duration = 5000, onClose, action
           px-4 py-3 shadow-lg
           backdrop-blur-sm
           transition-all duration-300 ease-out
-          hover:shadow-xl hover:shadow-${type === "success" ? "emerald" : type === "error" ? "red" : type === "success" ? "cyan" : "amber"}-500/20
+          hover:shadow-xl hover:shadow-${type === "success" ? "emerald" : type === "error" ? "red" : type === "info" ? "cyan" : "amber"}-500/20
         `}
       >
         <div className="flex-shrink-0">
