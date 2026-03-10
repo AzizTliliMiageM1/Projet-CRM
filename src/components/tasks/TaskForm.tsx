@@ -2,6 +2,9 @@
 
 import { useState, useCallback } from "react";
 import { taskCreateSchema, taskUpdateSchema } from "@/lib/validation/schemas";
+import { Input, Textarea } from "@/components/FormInputs";
+import { Button } from "@/components/Button";
+import { CheckCircle2 } from "lucide-react";
 
 interface Task {
   id: string;
@@ -75,62 +78,55 @@ export function TaskForm({ onSuccess, initialData }: TaskFormProps) {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-slate-200">Titre</label>
-        <input
-          type="text"
-          required
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-          placeholder="Call ABC Company"
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <Input
+        label="Titre"
+        type="text"
+        required
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Call ABC Company"
+      />
 
-      <div>
-        <label className="block text-sm font-medium text-slate-200">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-          placeholder="Notes..."
-          rows={3}
-        />
-      </div>
+      <Textarea
+        label="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Notes..."
+        rows={3}
+      />
 
-      <div>
-        <label className="block text-sm font-medium text-slate-200">Date d&apos;échéance</label>
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-        />
-      </div>
+      <Input
+        label="Date d'échéance"
+        type="date"
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+      />
 
-      <div className="flex items-center">
+      <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-700/50 bg-slate-900/30 backdrop-blur-sm hover:bg-slate-900/50 transition-colors cursor-pointer group">
         <input
           type="checkbox"
           id="completed"
           checked={completed}
           onChange={(e) => setCompleted(e.target.checked)}
-          className="h-4 w-4 rounded border-slate-700 bg-slate-950 text-sky-600 focus:ring-sky-500"
+          className="h-4 w-4 rounded border-slate-600 bg-slate-950 text-sky-600 focus:ring-2 focus:ring-sky-500/20 cursor-pointer"
         />
-        <label htmlFor="completed" className="ml-2 text-sm text-slate-200">
+        <label htmlFor="completed" className="text-sm text-slate-200 flex-1 cursor-pointer flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-slate-400 group-hover:text-sky-400 transition-colors" />
           Marquée comme complétée
         </label>
       </div>
 
       {error && <p className="text-sm text-red-400">{error}</p>}
 
-      <button
+      <Button
         type="submit"
-        disabled={loading}
-        className="flex w-full items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 disabled:cursor-not-allowed disabled:opacity-60"
+        variant="primary"
+        isLoading={loading}
+        fullWidth
       >
-        {loading ? (initialData ? "Mise à jour..." : "Création...") : initialData ? "Mettre à jour" : "Créer"}
-      </button>
+        {initialData ? "Mettre à jour" : "Créer"}
+      </Button>
     </form>
   );
 }

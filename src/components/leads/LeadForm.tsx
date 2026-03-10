@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { leadCreateSchema, leadUpdateSchema } from "@/lib/validation/schemas";
+import { Input, Select } from "@/components/FormInputs";
+import { Button } from "@/components/Button";
 
 interface Lead {
   id: string;
@@ -22,6 +24,14 @@ interface LeadFormProps {
 }
 
 const statusOptions: Array<Lead["status"]> = ["new", "qualified", "proposal", "negotiation", "won", "lost"];
+const statusLabels: Record<Lead["status"], string> = {
+  new: "Nouveau",
+  qualified: "Qualifié",
+  proposal: "Proposition",
+  negotiation: "Négociation",
+  won: "Remporté",
+  lost: "Perdu",
+};
 
 export function LeadForm({ onSuccess, initialData }: LeadFormProps) {
   const [title, setTitle] = useState(initialData?.title ?? "");
@@ -74,55 +84,43 @@ export function LeadForm({ onSuccess, initialData }: LeadFormProps) {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-slate-200">Titre</label>
-        <input
-          type="text"
-          required
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-          placeholder="Contrat ABC Company"
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <Input
+        label="Titre"
+        type="text"
+        required
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Contrat ABC Company"
+        error={error ? "Erreur" : undefined}
+      />
 
-      <div>
-        <label className="block text-sm font-medium text-slate-200">Statut</label>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value as Lead["status"])}
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-        >
-          {statusOptions.map((s) => (
-            <option key={s} value={s} className="bg-slate-950">
-              {s}
-            </option>
-          ))}
-        </select>
-      </div>
+      <Select
+        label="Statut"
+        value={status}
+        onChange={(e) => setStatus(e.target.value as Lead["status"])}
+        options={statusOptions.map((s) => ({ label: statusLabels[s], value: s }))}
+      />
 
-      <div>
-        <label className="block text-sm font-medium text-slate-200">Valeur (€)</label>
-        <input
-          type="number"
-          min="0"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-          placeholder="5000"
-        />
-      </div>
+      <Input
+        label="Valeur (€)"
+        type="number"
+        min="0"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="5000"
+      />
 
       {error && <p className="text-sm text-red-400">{error}</p>}
 
-      <button
+      <Button
         type="submit"
-        disabled={loading}
-        className="flex w-full items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 disabled:cursor-not-allowed disabled:opacity-60"
+        variant="primary"
+        isLoading={loading}
+        fullWidth
       >
-        {loading ? (initialData ? "Mise à jour..." : "Création...") : initialData ? "Mettre à jour" : "Créer"}
-      </button>
+        {initialData ? "Mettre à jour" : "Créer"}
+      </Button>
     </form>
   );
 }

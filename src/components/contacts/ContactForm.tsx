@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { contactCreateSchema, contactUpdateSchema } from "@/lib/validation/schemas";
+import { Input } from "@/components/FormInputs";
+import { Button } from "@/components/Button";
 
 interface Contact {
   id: string;
@@ -74,64 +76,53 @@ export function ContactForm({ onSuccess, initialData }: ContactFormProps) {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-sm font-medium text-slate-200">Prénom</label>
-          <input
-            type="text"
-            required
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-            placeholder="Jean"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-200">Nom</label>
-          <input
-            type="text"
-            required
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-            placeholder="Dupont"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-slate-200">Email</label>
-        <input
-          type="email"
+        <Input
+          label="Prénom"
+          type="text"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-          placeholder="jean@example.com"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="Jean"
+        />
+        <Input
+          label="Nom"
+          type="text"
+          required
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="Dupont"
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-slate-200">Téléphone</label>
-        <input
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-          placeholder="+33612345678"
-        />
-      </div>
+      <Input
+        label="Email"
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="jean@example.com"
+      />
+
+      <Input
+        label="Téléphone"
+        type="tel"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        placeholder="+33612345678"
+      />
 
       {error && <p className="text-sm text-red-400">{error}</p>}
 
-      <button
+      <Button
         type="submit"
-        disabled={loading}
-        className="flex w-full items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 disabled:cursor-not-allowed disabled:opacity-60"
+        variant="primary"
+        isLoading={loading}
+        fullWidth
       >
-        {loading ? (initialData ? "Mise à jour..." : "Création...") : initialData ? "Mettre à jour" : "Créer"}
-      </button>
+        {initialData ? "Mettre à jour" : "Créer"}
+      </Button>
     </form>
   );
 }
