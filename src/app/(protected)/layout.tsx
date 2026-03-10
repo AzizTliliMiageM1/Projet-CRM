@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/server";
 import { isAdmin } from "@/lib/auth/roles";
-import { SidebarNav } from "@/components/sidebar-nav";
+import { AnimatedSidebarNav } from "@/components/AnimatedSidebarNav";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +26,7 @@ export default async function ProtectedLayout({ children }: ProtectedLayoutProps
           </p>
           <p className="mt-1 text-lg font-semibold text-slate-50">SaaS</p>
         </div>
-        <SidebarNav isAdmin={isAdmin(currentUser.role)} />
+        <AnimatedSidebarNav isAdmin={isAdmin(currentUser.role)} />
         <div className="mt-auto border-t border-slate-800 pt-4 text-xs text-slate-400">
           <p>{currentUser.full_name ?? currentUser.email}</p>
           <p className="capitalize">Rôle : {currentUser.role ?? "user"}</p>
