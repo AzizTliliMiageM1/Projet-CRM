@@ -47,7 +47,7 @@ export async function createTask(
   const { data, error } = await supabase
     .from("tasks")
     .insert({
-      lead_id: payload.lead_id,
+      lead_id: payload.lead_id || null,
       title: payload.title,
       due_date: payload.due_date,
       completed: payload.completed ?? false,

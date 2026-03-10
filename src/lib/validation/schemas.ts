@@ -53,9 +53,9 @@ export const leadUpdateSchema = leadCreateSchema.partial().refine(
 export const taskCreateSchema = z.object({
   lead_id: z.string().uuid({ message: "lead_id invalide" }).optional().or(z.literal("")),
   title: z.string().min(1, "Titre requis"),
-  due_date: z.string().refine((value) => !Number.isNaN(Date.parse(value)), {
-    message: "Date d’échéance invalide",
-  }),
+  due_date: z.string().refine((value) => !value || !Number.isNaN(Date.parse(value)), {
+    message: "Date d'échéance invalide",
+  }).optional(),
   completed: z.boolean().optional(),
 });
 

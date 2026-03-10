@@ -99,10 +99,10 @@ create index if not exists leads_org_owner_idx on public.leads(organization_id, 
 create table if not exists public.tasks (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
-  lead_id uuid not null references public.leads(id) on delete cascade,
+  lead_id uuid references public.leads(id) on delete set null,
   title text not null,
    assigned_to uuid references auth.users(id) on delete set null,
-  due_date date not null,
+  due_date date,
   completed boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

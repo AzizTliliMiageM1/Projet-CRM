@@ -77,6 +77,7 @@ export function TasksView() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitting(true);
+    setError(null);
     try {
       const url = editingTask ? `/api/tasks/${editingTask.id}` : "/api/tasks";
       const method = editingTask ? "PATCH" : "POST";
@@ -87,8 +88,12 @@ export function TasksView() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error("Erreur lors de l'enregistrement");
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data?.error?.message || "Erreur lors de l'enregistrement");
+      }
 
+      toast.success(editingTask ? "Tâche mise à jour" : "Tâche créée");
       setFormData({ title: "", due_date: "", completed: false });
       setShowForm(false);
       setEditingTask(null);
@@ -100,7 +105,9 @@ export function TasksView() {
         setTasks(Array.isArray(data) ? data : []);
       }
     } catch (err) {
-      setError("Erreur lors de l'enregistrement de la tâche");
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      setError(message);
+      toast.error(message);
     } finally {
       setFormSubmitting(false);
     }
